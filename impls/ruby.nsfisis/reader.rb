@@ -1,7 +1,7 @@
 require 'strscan'
 
 TOKEN_RE = /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"?|;.*|[^\s\[\]{}('"`,;)]*)/
-INT_RE = /\A[0-9]+\z/
+INT_RE = /\A[-+]?[0-9]+\z/
 
 def read_str(s)
   tokens = tokenize(s)
