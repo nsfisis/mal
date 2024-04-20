@@ -51,6 +51,12 @@ class Reader
     t = next_
     if t =~ INT_RE
       t.to_i
+    elsif t == 'nil'
+      nil
+    elsif t == 'true'
+      true
+    elsif t == 'false'
+      false
     else
       t.to_sym
     end
