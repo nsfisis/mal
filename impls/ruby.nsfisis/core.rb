@@ -1,0 +1,16 @@
+NS = {
+  :'+' => ->(a, b) { a + b },
+  :'-' => ->(a, b) { a - b },
+  :'*' => ->(a, b) { a * b },
+  :'/' => ->(a, b) { a / b },
+  :'=' => ->(a, b) { a == b },
+  :'<' => ->(a, b) { a < b },
+  :'<=' => ->(a, b) { a <= b },
+  :'>' => ->(a, b) { a > b },
+  :'>=' => ->(a, b) { a >= b },
+  prn: ->(a) { puts pr_str(a); nil },
+  list: ->(*a) { a },
+  list?: ->(a) { a.is_a?(Array) },
+  empty?: ->(a) { a.empty? },
+  count: ->(a) { a&.length || 0 },
+}
