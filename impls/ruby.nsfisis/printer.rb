@@ -2,7 +2,7 @@ def pr_str(value)
   case value
   when Array
     "(#{value.map{pr_str(_1)}.join(' ')})"
-  when Proc
+  when LispClosure
     '#<function>'
   when NilClass
     'nil'
