@@ -13,6 +13,14 @@ class LispClosure
   end
 end
 
+class Atom
+  attr_accessor :value
+
+  def initialize(value)
+    @value = value
+  end
+end
+
 def read_
   s = gets
   if s
@@ -62,7 +70,7 @@ def eval_(value, env)
           env = new_env
           next # TCO
         when :do
-          raise "invalid 'do' form" unless value.length == 1
+          raise "invalid 'do' form" if value.length == 1
           value[1..-2].each do |v|
             eval_(v, env)
           end
@@ -105,7 +113,7 @@ def eval_(value, env)
             next # TCO
           else
             # Proc
-            return x[*xs]
+            return x[env, *xs]
           end
         end
       end
@@ -116,7 +124,7 @@ def eval_(value, env)
 end
 
 def print_(value)
-  s = pr_str(value)
+  s = pr_str(value, print_readably: true)
   puts s
 end
 
@@ -134,12 +142,15 @@ rescue RuntimeError => e
 end
 
 def repl
-  env = Env.new(nil)
+  repl_env = Env.new(nil)
   NS.each do |k, v|
-    env.set(k, v)
+    repl_env.set(k, v)
   end
+  repl_env.set(:eval, ->(env, ast) { eval_(ast, repl_env) })
 
-  while rep(env)
+  eval_ read_str("(def! load-file (fn* (file-path) (eval (read-string (str \"(do \" (slurp file-path) \"\n nil)\")))))"), repl_env
+
+  while rep(repl_env)
   end
 end
 

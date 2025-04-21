@@ -12,16 +12,6 @@ class Env
     @data[k] = v
   end
 
-  def find(k)
-    if @data.has_key?(k)
-      self
-    elsif @outer
-      @outer.find(k)
-    else
-      nil
-    end
-  end
-
   def get(k)
     e = find(k)
     if e
@@ -31,7 +21,19 @@ class Env
     end
   end
 
+  protected
+
   def get_local(k)
     @data[k]
+  end
+
+  def find(k)
+    if @data.has_key?(k)
+      self
+    elsif @outer
+      @outer.find(k)
+    else
+      nil
+    end
   end
 end

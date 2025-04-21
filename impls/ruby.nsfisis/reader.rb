@@ -2,6 +2,7 @@ require 'strscan'
 
 TOKEN_RE = /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"?|;.*|[^\s\[\]{}('"`,;)]*)/
 INT_RE = /\A[-+]?[0-9]+\z/
+STR_RE = /\A"/
 
 def read_str(s)
   tokens = tokenize(s)
@@ -26,9 +27,14 @@ class Reader
   end
 
   def read_form
-    fst = peek
-    if fst == '('
+    case peek
+    when '('
       read_list
+    when '@'
+      next_
+      sym = read_atom
+      raise unless sym.is_a?(Symbol)
+      [:deref, sym]
     else
       read_atom
     end
@@ -51,6 +57,8 @@ class Reader
     t = next_
     if t =~ INT_RE
       t.to_i
+    elsif t =~ STR_RE
+      unescape_str(t[1..-2])
     elsif t == 'nil'
       nil
     elsif t == 'true'
@@ -63,6 +71,13 @@ class Reader
   end
 
   private
+
+  def unescape_str(s)
+    s
+      .gsub('\"', '"')
+      .gsub('\n', "\n")
+      .gsub("\\\\", "\\")
+  end
 
   def next_
     pos = @pos
