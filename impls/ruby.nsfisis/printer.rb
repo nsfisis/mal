@@ -1,7 +1,7 @@
 def pr_str(value, print_readably: false)
   case value
   when Array
-    "(#{value.map{pr_str(_1)}.join(' ')})"
+    "(#{value.map{pr_str(_1, print_readably: print_readably)}.join(' ')})"
   when LispClosure
     '#<function>'
   when Atom

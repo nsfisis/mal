@@ -20,5 +20,40 @@ NS = {
   atom?: ->(env, a) { a.is_a?(Atom) },
   deref: ->(env, a) { a.value },
   reset!: ->(env, a, b) { a.value = b },
-  swap!: ->(env, a, b, *args) { a.value = eval_([b, a.value, *args], env) }
+  swap!: ->(env, a, b, *args) { a.value = eval_([b, a.value, *args], env) },
+  cons: ->(env, a, b) { [a] + b },
+  concat: ->(env, *a) { a.flatten },
+  quasiquote: ->(env, a) {
+    quasiquote = ->(a) {
+      if a.is_a?(Array)
+        case
+        when a.empty?
+          []
+        when a.first == :unquote
+          a[1]
+        else
+          result = []
+          a.reverse_each do |elt|
+            if elt.is_a?(Array) && elt[0] == :'splice-unquote'
+              result = [
+                :concat,
+                elt[1],
+                result,
+              ]
+            else
+              result = [
+                :cons,
+                quasiquote[elt],
+                result,
+              ]
+            end
+          end
+          result
+        end
+      else
+        [:quote, a]
+      end
+    }
+    quasiquote[a]
+  },
 }
