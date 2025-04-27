@@ -35,6 +35,22 @@ class Reader
       sym = read_atom
       raise unless sym.is_a?(Symbol)
       [:deref, sym]
+    when "'"
+      next_
+      x = read_form
+      [:quote, x]
+    when '`'
+      next_
+      x = read_form
+      [:quasiquote, x]
+    when '~'
+      next_
+      x = read_form
+      [:unquote, x]
+    when '~@'
+      next_
+      x = read_form
+      [:'splice-unquote', x]
     else
       read_atom
     end

@@ -56,4 +56,10 @@ NS = {
     }
     quasiquote[a]
   },
+  nth: ->(env, a, b) {
+    raise "nth: out of range" unless 0 <= b && b < a.length
+    a[b]
+  },
+  first: ->(env, a) { a&.first },
+  rest: ->(env, a) { a.nil? || a.empty? ? [] : a[1..] },
 }
