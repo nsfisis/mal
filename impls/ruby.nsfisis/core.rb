@@ -62,4 +62,23 @@ NS = {
   },
   first: ->(env, a) { a&.first },
   rest: ->(env, a) { a.nil? || a.empty? ? [] : a[1..] },
+  throw: ->(env, a) { raise LispException, a },
+  apply: ->(env, a, *b) {
+    raise "apply: invalid form" unless a.is_a?(LispClosure) || a.is_a?(Proc)
+    raise "apply: invalid form" if b.empty?
+    fn = a.is_a?(LispClosure) ? a.fn : a
+    args = b[..-2] + b.last
+    fn[env, *args]
+  },
+  map: ->(env, a, b) {
+    raise "map: invalid form" unless a.is_a?(LispClosure) || a.is_a?(Proc)
+    b.map {
+      fn = a.is_a?(LispClosure) ? a.fn : a
+      fn[env, it]
+    }
+  },
+  nil?: ->(env, a) { a.nil? },
+  true?: ->(env, a) { a.is_a?(TrueClass) },
+  false?: ->(env, a) { a.is_a?(FalseClass) },
+  symbol?: ->(env, a) { a.is_a?(Symbol) },
 }
