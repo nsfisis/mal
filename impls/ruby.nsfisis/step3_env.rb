@@ -1,3 +1,4 @@
+require_relative './types.rb'
 require_relative './reader.rb'
 require_relative './printer.rb'
 require_relative './env.rb'

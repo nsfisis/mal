@@ -1,17 +1,8 @@
+require_relative './types.rb'
 require_relative './reader.rb'
 require_relative './printer.rb'
 require_relative './env.rb'
 require_relative './core.rb'
-
-class LispClosure
-  attr_reader :body, :params, :env
-
-  def initialize(body, params, env)
-    @body = body
-    @params = params
-    @env = env
-  end
-end
 
 def read_
   s = gets
