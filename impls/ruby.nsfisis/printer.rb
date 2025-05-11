@@ -10,10 +10,10 @@ def pr_str(value, print_readably: false)
   when String
     if print_readably
       s = value
-        .gsub("\\", "\\\\")
+        .gsub("\\", "\\\\\\\\")
         .gsub("\n", '\n')
         .gsub('"', '\"')
-      '"' + s + '"'
+      '"' + s + '"' + " (#{s.length})"
     else
       value
     end
