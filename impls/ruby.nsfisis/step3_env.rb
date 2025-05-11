@@ -5,8 +5,11 @@ require_relative './env.rb'
 
 def read_
   s = gets
-  return unless s
-  read_str(s.chomp)
+  if s
+    [read_str(s.chomp), false]
+  else
+    return [nil, true]
+  end
 end
 
 def apply(value, env)
@@ -62,14 +65,14 @@ def eval_ast(ast, env)
 end
 
 def print_(value)
-  s = pr_str(value)
+  s = pr_str(value, print_readably: true)
   puts s
 end
 
 def rep(env)
   print "user> "
-  input = read_
-  return false unless input
+  input, is_eof = read_
+  return false if is_eof
   result = eval_ input, env
   print_ result
   return true
