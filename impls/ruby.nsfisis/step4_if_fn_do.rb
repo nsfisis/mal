@@ -96,7 +96,7 @@ def eval_ast(ast, env)
 end
 
 def print_(value)
-  s = pr_str(value)
+  s = pr_str(value, print_readably: true)
   puts s
 end
 
